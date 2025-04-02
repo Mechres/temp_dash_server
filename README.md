@@ -22,7 +22,7 @@ This application collects and exposes system statistics including:
 
 1. Download the latest release from the [Releases](https://github.com/mechres/temp_dash_server/releases) page.
 2. Extract the zip file to a location of your choice.
-3. Run `SystemMonitor.exe` to start the server.
+3. Run `SystemMonitor.exe` as administrator to start the server.
 
 ### Option 2: Run from Source
 
