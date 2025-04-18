@@ -18,6 +18,7 @@ import traceback
 from datetime import datetime
 import clr  # pythonnet
 import shutil
+from flask_cors import CORS
 
 # Configure logging
 log_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logs')
@@ -149,6 +150,9 @@ sys.excepthook = handle_exception
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
+# Enable Cors for all routes
+# Needed for localhost testing for webapp
+CORS(app)
 
 _last_media_info = {
     'title': None,
@@ -422,6 +426,12 @@ def get_system_stats():
 
 def keyboard_input_thread():
     print("Press 'q' to quit the server...")
+    print("Navigation shortcuts:")
+    print("  'm' - Open Media Details")
+    print("  'p' - Open Performance Dashboard")
+    print("  't' - Toggle Text View")
+    print("  'h' - Return to Home Screen")
+    
     while True:
         if msvcrt.kbhit():
             key = msvcrt.getch().decode('utf-8').lower()
@@ -429,6 +439,18 @@ def keyboard_input_thread():
                 print("Quitting server...")
                 # Force exit the application
                 os._exit(0)
+            elif key == 'm':
+                print("Sending command: Open Media Details")
+                socketio.emit('navigation_command', {'action': 'open_media_details'})
+            elif key == 'p':
+                print("Sending command: Open Performance Dashboard")
+                socketio.emit('navigation_command', {'action': 'open_performance_dashboard'})
+            elif key == 't':
+                print("Sending command: Toggle Text View")
+                socketio.emit('navigation_command', {'action': 'toggle_text_view'})
+            elif key == 'h':
+                print("Sending command: Return to Home")
+                socketio.emit('navigation_command', {'action': 'return_home'})
         time.sleep(0.1)
 
 def background_thread():
